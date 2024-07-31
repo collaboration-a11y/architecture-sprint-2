@@ -1,4 +1,4 @@
-name: mongo-sharding-repl
+name: mongo-sharding-repl-cache
 
 services:
   configSvr:
@@ -211,6 +211,13 @@ services:
       test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
       interval: 5s
       start_period: 10s
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      app-network:
+        ipv4_address: 173.17.0.30
   mongos_router:
     image: mongo:7.0.0
     container_name: mongos_router
@@ -249,6 +256,7 @@ services:
     environment:
       MONGODB_URL: "mongodb://mongos_router:27020"
       MONGODB_DATABASE_NAME: "somedb"
+      REDIS_URL: "redis://redis:6379"
     
 networks:
   app-network:

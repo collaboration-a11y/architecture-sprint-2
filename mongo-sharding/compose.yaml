@@ -106,11 +106,11 @@ services:
       dockerfile: Dockerfile
     image: kazhem/pymongo_api:1.0.0
     depends_on:
-      - mongodb1
+      - mongos_router
     ports:
       - 8080:8080
     environment:
-      MONGODB_URL: "mongodb://mongodb1"
+      MONGODB_URL: "mongodb://mongos_router:27020"
       MONGODB_DATABASE_NAME: "somedb"
 
 networks:
