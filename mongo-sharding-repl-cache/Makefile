@@ -1,4 +1,4 @@
 up:
-	docker compose --env-file ./.env up -d
-setup-mongodb-sharding-with-repl:
-	./scripts/init-sharding-with-repl.sh
+	docker compose up -d
+setup-mongodb-sharding-with-repl-cache:
+	./scripts/init-sharding-with-repl-cache.sh

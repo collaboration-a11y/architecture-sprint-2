@@ -6,7 +6,7 @@ services:
     container_name: configSvr
     restart: always
     ports:
-      - "27016:${CONFIG_SVR_PORT}"
+      - "27016:27016"
     networks:
       app-network:
         ipv4_address: 173.17.0.10
@@ -19,7 +19,7 @@ services:
         "config_server",
         "--bind_ip_all",
         "--port",
-        "${CONFIG_SVR_PORT}",
+        "27016",
       ]
     healthcheck:
       test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
@@ -31,11 +31,11 @@ services:
     image: mongo:7.0.0
     restart: always
     ports:
-      - "27017:${MONGODB_DATABASE_PORT}"
+      - "27017:27017"
     networks:
       app-network:
         ipv4_address: 173.17.0.6
-    command: ["--bind_ip_all", "--port", "${MONGODB_DATABASE_PORT}"]
+    command: ["--bind_ip_all", "--port", "27017"]
     volumes:
       - mongodb1_data_container:/data/db
 
@@ -44,14 +44,14 @@ services:
     container_name: shard1
     restart: always
     ports:
-      - "27018:${SH_PORT_1}"
+      - "27018:27018"
     networks:
       app-network:
         ipv4_address: 173.17.0.9
     volumes:
       - shard1-data:/data/db
     command:
-      ["--shardsvr", "--replSet", "shard1", "--bind_ip_all", "--port", "${SH_PORT_1}"]
+      ["--shardsvr", "--replSet", "shard1", "--bind_ip_all", "--port", "27018"]
     healthcheck:
       test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
       interval: 5s
@@ -130,14 +130,14 @@ services:
     container_name: shard2
     restart: always
     ports:
-      - "27019:${SH_PORT_2}"
+      - "27019:27019"
     networks:
       app-network:
         ipv4_address: 173.17.0.8
     volumes: 
       - shard2-data:/data/db
     command:
-      ["--shardsvr", "--replSet", "shard2", "--bind_ip_all", "--port", "${SH_PORT_2}"]
+      ["--shardsvr", "--replSet", "shard2", "--bind_ip_all", "--port", "27019"]
     healthcheck:
       test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
       interval: 5s
@@ -223,7 +223,7 @@ services:
     container_name: mongos_router
     restart: always
     ports:
-      - "27020:${MONGOS_ROUTER_PORT}"
+      - "27020:27020"
     networks:
       app-network:
         ipv4_address: 173.17.0.7
@@ -231,10 +231,10 @@ services:
       [
         "mongos",
         "--configdb",
-        "config_server/configSvr:${CONFIG_SVR_PORT}",
+        "config_server/configSvr:27016",
         "--bind_ip_all",
         "--port",
-        "${MONGOS_ROUTER_PORT}"
+        "27020"
       ]
     healthcheck:
       test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
